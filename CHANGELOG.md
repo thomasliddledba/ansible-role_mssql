@@ -1,5 +1,8 @@
 # Change Log
 
+## [v0.2](https://github.com/thomasliddledba/ansible-role_mssql/tree/v0.2) (2017-11-27)
+[Full Changelog](https://github.com/thomasliddledba/ansible-role_mssql/compare/v0.1...v0.2)
+
 ## [v0.1](https://github.com/thomasliddledba/ansible-role_mssql/tree/v0.1) (2017-11-27)
 **Merged pull requests:**
 
