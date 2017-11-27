@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - ansible-role_mssql
+
+  vars_prompt:
+  - name: sa_password
+    prompt: "Enter SA Password for this instance"
+    private: yes

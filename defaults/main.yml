@@ -1,0 +1,20 @@
+---
+# vars file for ansible-role_mssql
+edition: 1 
+memorylimitMB: 4096
+tcpport: 1433
+traceflags: 1118 834
+capturecoredump: true
+coredumptype: mini
+
+# vars for instance configuration [sp_configure]
+backupcompression: 1
+maxservermemory: 4096
+minservermemory: 1024
+maxdop: 0
+defaulttrace: 0
+
+# Directory structure
+datadir: /mssql-data/data
+logdir: /mssql-log/log
+auditdir: /mssql-audit/audit
