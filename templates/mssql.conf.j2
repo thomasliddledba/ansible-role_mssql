@@ -1,0 +1,35 @@
+[EULA]
+accepteula = Y
+
+[coredump]
+captureminiandfull = {{ capturecoredump }}
+coredumptype = {{ coredumptype }}
+
+[filelocation]
+defaultbackupdir = /var/opt/mssql/data/
+defaultdatadir = {{ datadir }}
+defaultdumpdir = {{ logdir }}
+defaultlogdir = {{ auditdir }}
+
+[hadr]
+hadrenabled = 0
+
+[language]
+lcid = 1033
+
+[memory]
+memorylimitmb = {{ memorylimitMB }}
+
+[network]
+tcpport = {{ tcpport }}
+
+[sqlagent]
+databasemailprofile = default
+errorlogfile = /var/opt/mssql/log/sqlagentlog.log
+errorlogginglevel = 7
+
+[telemetry]
+customerfeedback = false
+userrequestedlocalauditdirectory = /tmp/audit
+
+[traceflag]

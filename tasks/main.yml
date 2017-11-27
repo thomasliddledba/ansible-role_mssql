@@ -1,0 +1,115 @@
+---
+- yum_repository:
+    name: packages-microsoft-mssql-server
+    description: packages-microsoft-com-mssql-server
+    baseurl: https://packages.microsoft.com/rhel/7/mssql-server-2017/
+    enabled: yes
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+    gpgcheck: yes
+
+- yum_repository:
+    name: packages-microsoft-mssql-tools
+    description: packages-microsoft-com-mssql-tools
+    baseurl: https://packages.microsoft.com/rhel/7/prod/
+    enabled: yes
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+    gpgcheck: yes
+
+- name: install expect
+  yum: name=expect
+
+- name: install mssql-server
+  yum: name=mssql-server
+
+- name: stop mssql-server
+  service: name=mssql-server state=stopped enabled=yes
+
+- name: setup mssql-server
+  shell: expect -c 'spawn /opt/mssql/lib/mssql-conf/mssql-conf.py setup; expect edition; send "{{ edition }}\n"; expect license; send "Yes\n"; expect password; send "{{ sa_password }}\n"; expect password; send "{{ sa_password }}\n"; expect completed; interact'
+  ignore_errors: true
+  register: res
+
+- name: create data directory
+  file: 
+    path: "{{ datadir }}"
+    state: directory
+    owner: mssql
+    group: mssql
+    recurse: yes
+
+- name: create log directory
+  file: 
+    path: "{{ logdir }}"
+    state: directory
+    owner: mssql
+    group: mssql
+    recurse: yes
+
+- name: create audit directory
+  file: 
+    path: "{{ auditdir }}"
+    state: directory
+    owner: mssql
+    group: mssql
+    recurse: yes
+
+- name: install mssql-tools
+  package:
+    name: mssql-tools
+    state: latest
+  environment:
+    ACCEPT_EULA: 'y'
+
+- name: creating mssql.conf file 
+  template:
+      src: ../templates/mssql.conf.j2
+      dest: /var/opt/mssql/mssql.conf
+      owner: mssql
+      group: mssql
+
+- name: enable trace flags
+  shell: /opt/mssql/bin/mssql-conf traceflag {{ traceflags }} on
+
+- name: start mssql-server
+  service: name=mssql-server state=started enabled=yes
+
+- name: sp_configure - advanced options
+  shell: /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1,{{ tcpport }} -U sa -P {{ sa_password }} -d master -b -Q "EXEC sp_configure 'show advanced options',1; RECONFIGURE WITH OVERRIDE;" -r1
+  become: true
+  register: bc_results
+
+- name: sp_configure - backupcompression
+  shell: /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1,{{ tcpport }} -U sa -P {{ sa_password }} -d master -b -Q "EXEC sp_configure 'backup compression default', {{ backupcompression }}; RECONFIGURE WITH OVERRIDE;" -r1
+  become: true
+  register: bc_results
+
+- name: sp_configure - maxservermemory
+  shell: /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1,{{ tcpport }} -U sa -P {{ sa_password }} -d master -b -Q "EXEC sp_configure 'max server memory (MB)', {{ maxservermemory }}; RECONFIGURE WITH OVERRIDE;" -r1
+  become: true
+  register: max_results
+
+- name: sp_configure - minservermemory
+  shell: /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1,{{ tcpport }} -U sa -P {{ sa_password }} -d master -b -Q "EXEC sp_configure 'min server memory (MB)', {{ minservermemory }}; RECONFIGURE WITH OVERRIDE;" -r1
+  become: true
+  register: min_results
+
+- name: sp_configure - maxdop
+  shell: /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1,{{ tcpport }} -U sa -P {{ sa_password }} -d master -b -Q "EXEC sp_configure 'max degree of parallelism', {{ maxdop }}; RECONFIGURE WITH OVERRIDE;" -r1
+  become: true
+  register: maxdop_results
+
+- name: sp_configure - default trace enabled
+  shell: /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1,{{ tcpport }} -U sa -P {{ sa_password }} -d master -b -Q "EXEC sp_configure 'default trace enabled', {{ defaulttrace }}; RECONFIGURE WITH OVERRIDE;" -r1
+  become: true
+  register: trace_results
+
+- name: Confirming port availablity for MSSQL-Server - {{ tcpport }}
+  wait_for: 
+    port: "{{ tcpport }}"
+    delay: 10
+
+- name: Confirming All System Databases are online for MSSQL-Server
+  shell: /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1,{{ tcpport }} -U sa -P {{ sa_password }} -d master -b -Q "IF (SELECT count(database_id) from sys.databases WHERE state_desc='Online' and name IN ('master','msdb','model','tempdb')) < 4 BEGIN RAISERROR('System Databases are NOT ONLINE',16,1) END;" -r1
+  become: true
+  register: mstools_results
+  failed_when: "'System Databases are NOT ONLINE' in mstools_results.stderr"
