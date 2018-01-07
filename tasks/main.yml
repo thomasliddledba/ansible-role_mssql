@@ -19,7 +19,12 @@
   yum: name=expect
 
 - name: install mssql-server
-  yum: name=mssql-server
+  package:
+    name: mssql-server
+    state: latest
+  environment:
+    ACCEPT_EULA: 'y'
+  #yum: name=mssql-server
 
 - name: stop mssql-server
   service: name=mssql-server state=stopped enabled=yes

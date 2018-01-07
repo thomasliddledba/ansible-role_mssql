@@ -1,5 +1,5 @@
 # Role Name - ansible-role_mssql
-This role will install SQL Server 2017 CU1 on RHEL
+This role will install SQL Server 2017 `latest` on RHEL
 
 # Requirements
 1. RHEL/CentOS 7

@@ -1,2 +1,3 @@
 .vagrant
-tests/
+tests/playbook.retry
+CONTRIBUTING.md
