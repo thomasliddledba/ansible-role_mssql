@@ -7,6 +7,9 @@ This role will install SQL Server 2017 `latest` on RHEL
 3. Choose Product Edition (see `Editions` Section)
 4. Vagrant 1.9+
 5. Ansible 2.2+
+6. Read and understand License/Privacy Terms:
+> The license terms and privacy statement for this product can be found in </br>
+> * https://go.microsoft.com/fwlink/?LinkId=855864&clcid=0x409</br>
 
 # Role Variables
 | Variable | Description | Default |
@@ -73,7 +76,7 @@ $> cd ansible-role_mssql
 $> vagrant up
 ```
 5.  Test with sqlcmd from your local machine.  Here you will verify version of database, create a new database, and ensure it is created in the correct directories.
-```bash
+```sql
 $> sqlcmd -S 127.0.0.1,11443 -U sa -P <sa_password variable>
 1> select @@version
 2> go
@@ -94,7 +97,8 @@ physical_name
 Thomas Liddle
  - www.thomasliddledba.com
  - Facebook: http://fb.tldba.co
- - Twitter: #thomasliddledba
+ - Twitter: https://twitter.com/thomasliddledba
+ - YouTube: http://yt.tldba.co
 
 # Other Information
 ## Editions
