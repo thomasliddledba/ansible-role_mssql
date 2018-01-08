@@ -6,11 +6,13 @@ This role will install SQL Server 2017 `latest` on RHEL
 2. <a href="https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-setup-tools">sqlcmd (SQL Server Command Line Tool)</a> Installed on Test Host <sup>1<sup>
 3. Choose Product Edition (see `Editions` Section)
 4. Vagrant 1.9+
+5. Ansible 2.2+
 
 # Role Variables
 | Variable | Description | Default |
 | --- | --- | --- |
 | sa_password | Setting the initial SA Password.<sup>2</sup> | Prompted or set in vars/main.yml |
+| accept_eula | Indicates you accept the EULA for SQL Server.  Accepts `Yes` or `No`.  Is case-senstive. | No |
 | edition | The edition of SQL Server you want to install.  Chose from the instances aboven <sup>3</sup>| Prompted or set in vars/main.yml |
 | memorylimitMB | Max Memory Limit in MegaBytes (MB) | 4096 |
 | tcpport | SQL Server Port on the VM's IP | 1433 |
@@ -46,6 +48,9 @@ The example below is a sample playbook to install MSSQL Server for Linux on RHEL
          - name: sa_password
            prompt: "Enter the SA Password for this instance"
            private: yes
+         - name: accept_eula
+           value: Yes|No
+> Note: the `accept_eula` and `sa_password` are case-senstive
 
 ## Testing with Vagrant for local development
 ### Requirements

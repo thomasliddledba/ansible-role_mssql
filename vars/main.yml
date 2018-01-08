@@ -1,6 +1,7 @@
 ---
 # vars file for ansible-role_mssql
 edition: 1
+accept_eula: No
 memorylimitMB: 4096
 tcpport: 1433
 traceflags: 834

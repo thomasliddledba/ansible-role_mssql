@@ -8,3 +8,6 @@
   - name: sa_password
     prompt: "Enter SA Password for this instance"
     private: yes
+  - name: accept_eula
+    prompt: "Accept the EULA Yes|No"
+    private: Yes

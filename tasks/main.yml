@@ -1,4 +1,8 @@
 ---
+- name: Checking Acceptance of EULA
+  fail: msg="EULA was not accepted"
+  when: accept_eula != "Yes"
+
 - yum_repository:
     name: packages-microsoft-mssql-server
     description: packages-microsoft-com-mssql-server
@@ -12,25 +16,24 @@
     description: packages-microsoft-com-mssql-tools
     baseurl: https://packages.microsoft.com/rhel/7/prod/
     enabled: yes
-    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asupgrading.stdoutc
     gpgcheck: yes
 
 - name: install expect
   yum: name=expect
 
-- name: install mssql-server
+- name: install mssql-server accept_eula "{{ accept_eula[:1] }}"
   package:
     name: mssql-server
     state: latest
   environment:
-    ACCEPT_EULA: 'y'
-  #yum: name=mssql-server
+    ACCEPT_EULA: "{{ accept_eula[:1] }}"
 
 - name: stop mssql-server
   service: name=mssql-server state=stopped enabled=yes
 
 - name: setup mssql-server
-  shell: expect -c 'spawn /opt/mssql/lib/mssql-conf/mssql-conf.py setup; expect edition; send "{{ edition }}\n"; expect license; send "Yes\n"; expect password; send "{{ sa_password }}\n"; expect password; send "{{ sa_password }}\n"; expect completed; interact'
+  shell: expect -c 'spawn /opt/mssql/lib/mssql-conf/mssql-conf.py setup; expect edition; send "{{ edition }}\n"; expect license; send "{{ accept_eula }}\n"; expect password; send "{{ sa_password }}\n"; expect password; send "{{ sa_password }}\n"; expect completed; interact'
   ignore_errors: true
   register: res
 
@@ -58,12 +61,12 @@
     group: mssql
     recurse: yes
 
-- name: install mssql-tools
+- name: install mssql-tools accept_eula "{{ accept_eula[:1] }}"
   package:
     name: mssql-tools
     state: latest
   environment:
-    ACCEPT_EULA: 'y'
+    ACCEPT_EULA: "{{ accept_eula[:1] }}"
 
 - name: creating mssql.conf file 
   template:
