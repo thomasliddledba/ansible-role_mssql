@@ -4,16 +4,19 @@ edition: 1
 accept_eula: No
 memorylimitMB: 4096
 tcpport: 1433
-traceflags: 1118 834
+traceflags: 834
 capturecoredump: true
 coredumptype: mini
 
 # vars for instance configuration [sp_configure]
 backupcompression: 1
+backupchecksumdefault: 0
 maxservermemory: 4096
 minservermemory: 1024
 maxdop: 0
 defaulttrace: 0
+adhocdistributedqueries: 1
+
 
 # Directory structure
 datadir: /mssql-data/data

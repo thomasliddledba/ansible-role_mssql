@@ -22,7 +22,7 @@ Vagrant.configure('2') do |config|
     machine.vm.provision 'ansible' do |ansible|
       ansible.playbook = 'tests/playbook.yml'
       ansible.inventory_path = 'tests/inventory'
-      ansible.extra_vars = {sa_password: "My?Password12345", accept_eula: "No", edition: "1"}
+      ansible.extra_vars = {sa_password: "My?Password12345", accept_eula: "Yes", edition: "1"}
     end
 
   end

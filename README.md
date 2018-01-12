@@ -23,11 +23,13 @@ This role will install SQL Server 2017 `latest` on RHEL
 | capturecoredump | SQL Server Core Dump setting [ true or false] | True |
 | coredumptype | SQL Server Core Dump type [Only takes effect if 'capturecoredump' is true] | mini |
 | backupcompression | Enable/Disable Backup Compression [ 1=true or 0=False] | 1 |
+| backupchecksumdefault | Use the backup checksum default setting to enable or disable backup checksum during backup and restore. | 0 |
 | maxservermemory | Max Server Memory (MB) for SQL Server.  MSSQL requires at miniumum 3025. | 4096 |
 | minservermemory | Min Server Memory (MB) for SQL Server.  MSSQL starts with miniumim needed. | 1024 |
 | maxdop | Max Degree of Parrellism | 0 |
 | defaulttrace | Default Trace for SQL Server [default=0 (false)] | 0 |
 | datadir | Create the target directory for new database data files. | /mssql-data/data <sup>5</sup>|
+| adhocdistributedqueries | Ad hoc distributed queries use the OPENROWSET and OPENDATASOURCE functions to connect to remote data sources that use OLE DB. | 1 |
 | logdir | Create the target directory for new database log files. | /mssql-log/log <sup>5</sup>|
 | auditdir | Create a target directory for new Local Audit logs | /mssql-audit/audit <sup>5</sup>|
 

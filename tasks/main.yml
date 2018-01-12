@@ -111,6 +111,16 @@
   become: true
   register: trace_results
 
+- name: sp_configure - ad hoc distributed queries
+  shell: /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1,{{ tcpport }} -U sa -P {{ sa_password }} -d master -b -Q "EXEC sp_configure 'ad hoc distributed queries', {{ adhocdistributedqueries }}; RECONFIGURE WITH OVERRIDE;" -r1
+  become: true
+  register: trace_results
+
+- name: sp_configure - backup checksum default
+  shell: /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1,{{ tcpport }} -U sa -P {{ sa_password }} -d master -b -Q "EXEC sp_configure 'backup checksum default', {{ backupchecksumdefault }}; RECONFIGURE WITH OVERRIDE;" -r1
+  become: true
+  register: trace_results
+
 - name: Confirming port availablity for MSSQL-Server - {{ tcpport }}
   wait_for: 
     port: "{{ tcpport }}"

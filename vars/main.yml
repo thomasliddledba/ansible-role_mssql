@@ -10,10 +10,13 @@ coredumptype: mini
 
 # vars for instance configuration [sp_configure]
 backupcompression: 1
+backupchecksumdefault: 0
 maxservermemory: 4096
 minservermemory: 1024
 maxdop: 0
 defaulttrace: 0
+adhocdistributedqueries: 1
+
 
 # Directory structure
 datadir: /mssql-data/data
